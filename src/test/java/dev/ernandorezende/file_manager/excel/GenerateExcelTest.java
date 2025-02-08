@@ -1,5 +1,6 @@
 package dev.ernandorezende.file_manager.excel;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -7,15 +8,17 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.jupiter.api.Test;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
 public class GenerateExcelTest {
+    public static final String FILE_NAME = "test.xlsx";
     Logger logger = Logger.getLogger(GenerateExcelTest.class.getName());
+
     @Test
     public void testGenerateExcel() {
         Workbook workbook = new XSSFWorkbook();
@@ -36,11 +39,40 @@ public class GenerateExcelTest {
         }
 
         try {
-            workbook.write(new FileOutputStream("test.xlsx"));
+            workbook.write(new FileOutputStream(FILE_NAME));
             workbook.close();
-            logger.log(Level.INFO, "Excel generated");
+            logger.log(Level.INFO, "Excel generated: {0}", FILE_NAME);
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Excel generation failed", e);
+        }
+
+    }
+
+    @Test
+    void readExcel() throws FileNotFoundException {
+        try(FileInputStream file = new FileInputStream(new File(FILE_NAME))) {
+            Workbook workbook = new XSSFWorkbook(file);
+            Sheet sheet = workbook.getSheetAt(0);
+
+            Iterator<Row> rowIterator = sheet.iterator();
+            if(rowIterator.hasNext()) {
+                Row row = rowIterator.next();
+                System.out.print(row.getCell(0).getStringCellValue());
+                System.out.print(", "+ row.getCell(1).getStringCellValue());
+                System.out.println(", "+ row.getCell(2).getStringCellValue());
+
+            }
+
+            while(rowIterator.hasNext()) {
+                Row row = rowIterator.next();
+                String name = row.getCell(0).getStringCellValue();
+                double age = row.getCell(1).getNumericCellValue();
+                String gender = row.getCell(2).getStringCellValue();
+                TestData testData = new TestData(name, (int) age, gender);
+                logger.log(Level.INFO, "Row: {0} ", testData);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
 
     }
