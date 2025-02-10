@@ -5,13 +5,18 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.text.PDFTextStripper;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class MergePdfTest {
 
@@ -52,6 +57,18 @@ public class MergePdfTest {
                 });
     }
 
+    @AfterEach
+    void destroy() throws IOException {
+        Stream<Path> paths = Files.walk(Paths.get("src/test/resources/temp/"));
+        paths.sorted((p1, p2)  -> -p1.compareTo(p2))
+                .forEach(path -> {
+                    try {
+                        Files.delete(path);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+    }
 
     public static void createPDFDoc(String content, String filePath) throws IOException {
         PDDocument document = new PDDocument();
