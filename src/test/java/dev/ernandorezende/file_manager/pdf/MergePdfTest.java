@@ -30,9 +30,13 @@ public class MergePdfTest {
             PDFTextStripper pdfStripper = new PDFTextStripper();
             String actual = pdfStripper.getText(document);
             String expected = """
-                    Text1
-                    Text2
-                    """;
+                Text1, page:0
+                Text1, page:1
+                Text1, page:2
+                Text2, page:0
+                Text2, page:1
+                Text2, page:2
+                """;
             Assertions.assertEquals(expected, actual);
         }
     }
@@ -52,8 +56,6 @@ public class MergePdfTest {
                     }
                 });
     }
-
-
 
     public static void createPDFDoc(String content, String filePath) throws IOException {
         PDDocument document = new PDDocument();
