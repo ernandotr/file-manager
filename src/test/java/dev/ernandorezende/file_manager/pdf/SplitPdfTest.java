@@ -5,6 +5,7 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -69,11 +70,13 @@ public class SplitPdfTest {
 
     @Test
     void splitPdf() throws IOException {
+        Stream<Path> paths = Files.list(Paths.get("src/test/resources/temp/"));
+        Assertions.assertEquals(1, paths.count());
         String tempDir = "src/test/resources/temp/";
         String pdfDir = "src/test/resources/temp/sample.pdf";
         SplitPdf splitPdf = new SplitPdf();
         splitPdf.splitPdf(pdfDir, tempDir);
-
+        Assertions.assertEquals(4, Files.list(Paths.get("src/test/resources/temp/")).count());
 
     }
 }
