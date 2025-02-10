@@ -23,4 +23,5 @@ public class PDFMerge {
 
         mergerUtility.mergeDocuments(MemoryUsageSetting.setupMainMemoryOnly());
     }
+
 }

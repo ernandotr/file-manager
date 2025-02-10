@@ -1,6 +1,5 @@
-package dev.ernandorezende.file_manager;
+package dev.ernandorezende.file_manager.pdf;
 
-import dev.ernandorezende.file_manager.pdf.PDFMerge;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -10,7 +9,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 
 import java.io.File;
 import java.io.IOException;
@@ -55,31 +53,23 @@ public class MergePdfTest {
                 });
     }
 
-    @AfterEach
-    void destroy() throws IOException {
-        Stream<Path> paths = Files.walk(Paths.get("src/test/resources/temp/"));
-        paths.sorted((p1, p2)  -> -p1.compareTo(p2))
-                .forEach(path -> {
-                    try {
-                        Files.delete(path);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
-    }
+
 
     public static void createPDFDoc(String content, String filePath) throws IOException {
         PDDocument document = new PDDocument();
-        PDPage page = new PDPage();
-        document.addPage(page);
-        try(PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
-            contentStream.beginText();
-            contentStream.setFont(PDType1Font.HELVETICA, 14);
-            contentStream.showText(content);
-            contentStream.endText();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        for(int i = 0; i < 3; i++) {
+            PDPage page = new PDPage();
+            document.addPage(page);
+            try(PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
+                contentStream.beginText();
+                contentStream.setFont(PDType1Font.HELVETICA, 14);
+                contentStream.showText(content + ", page:"+i);
+                contentStream.endText();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
+
         document.save("src/test/resources/temp/" + filePath);
         document.close();
     }
