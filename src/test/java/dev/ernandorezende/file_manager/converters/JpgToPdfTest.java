@@ -22,5 +22,14 @@ public class JpgToPdfTest {
         Assertions.assertTrue(Files.exists(Paths.get(tempDir + filename+".pdf")));
     }
 
+    @Test
+    public void testJpegToPdfConvert() throws DocumentException, IOException {
+        String filename = "image2";
+        String fileType = ".jpeg";
+        ImageToPdf jpgToPdf = new ImageToPdf();
+        jpgToPdf.convert(tempDir, filename, fileType);
+        Assertions.assertTrue(Files.exists(Paths.get(tempDir + filename+".pdf")));
+    }
+
 
 }
