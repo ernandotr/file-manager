@@ -13,12 +13,14 @@ import java.io.IOException;
 
 public class ImageToPdf {
 
+    public static final String OUTPUT_EXTENSION_FILE = ".pdf";
+
     public  void convert(String tempDir, String fileName, String fileType) throws IOException, DocumentException {
         File root = new File(tempDir);
         if (!root.exists()) {
             root.mkdirs();
         }
-        String outputFile = fileName + ".pdf";
+        String outputFile = fileName + OUTPUT_EXTENSION_FILE;
 
         Document document = new Document();
         PdfWriter.getInstance(document, new FileOutputStream(new File(root, outputFile)));
