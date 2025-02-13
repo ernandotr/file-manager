@@ -4,15 +4,20 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.stream.Stream;
 
-public class PdfRemovePagesTest {
+public class PdfPagesManipulatingTest {
 
     @BeforeEach
     void setUp() {
@@ -49,13 +54,36 @@ public class PdfRemovePagesTest {
         document.close();
     }
 
+    @AfterEach
+    void destroy() throws IOException {
+        Stream<Path> paths = Files.walk(Paths.get("src/test/resources/temp/"));
+        paths.sorted((p1, p2)  -> -p1.compareTo(p2))
+                .forEach(path -> {
+                    try {
+                        Files.delete(path);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+    }
+
     @Test
     void testRemovePages() throws IOException {
         String filename = "src/test/resources/temp/sample.pdf";
-        PdfRemovePages pdfRemovePages = new PdfRemovePages();
+        PdfPagesManipulating pdfRemovePages = new PdfPagesManipulating();
         pdfRemovePages.removePage(filename, 2);
         PDDocument document = PDDocument.load(new File("src/test/resources/temp/newFile.pdf"));
         Assertions.assertEquals(2, document.getNumberOfPages());
+        document.close();
+    }
+
+    @Test
+    void testAddPages() throws IOException {
+        String filename = "src/test/resources/temp/sample.pdf";
+        PdfPagesManipulating pdfRemovePages = new PdfPagesManipulating();
+        pdfRemovePages.addPage(filename, 2);
+        PDDocument document = PDDocument.load(new File("src/test/resources/temp/newFile.pdf"));
+        Assertions.assertEquals(4, document.getNumberOfPages());
         document.close();
     }
 }
