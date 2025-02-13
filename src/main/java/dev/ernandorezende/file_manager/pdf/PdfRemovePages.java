@@ -7,7 +7,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class PdfRemovePages {
-    public static void removePage(String fileName, int pageNumber) throws IOException {
+    public void removePage(String fileName, int pageNumber) throws IOException {
         File file = new File(fileName);
 
         PDDocument document = PDDocument.load(file);
