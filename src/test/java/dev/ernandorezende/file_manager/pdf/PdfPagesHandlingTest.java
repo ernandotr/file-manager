@@ -17,7 +17,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class PdfPagesManipulatingTest {
+public class PdfPagesHandlingTest {
 
     @BeforeEach
     void setUp() {
@@ -70,7 +70,7 @@ public class PdfPagesManipulatingTest {
     @Test
     void testRemovePages() throws IOException {
         String filename = "src/test/resources/temp/sample.pdf";
-        PdfPagesManipulating pdfRemovePages = new PdfPagesManipulating();
+        PdfPagesHandling pdfRemovePages = new PdfPagesHandling();
         pdfRemovePages.removePage(filename, 2);
         PDDocument document = PDDocument.load(new File("src/test/resources/temp/newFile.pdf"));
         Assertions.assertEquals(2, document.getNumberOfPages());
@@ -80,7 +80,7 @@ public class PdfPagesManipulatingTest {
     @Test
     void testAddPages() throws IOException {
         String filename = "src/test/resources/temp/sample.pdf";
-        PdfPagesManipulating pdfRemovePages = new PdfPagesManipulating();
+        PdfPagesHandling pdfRemovePages = new PdfPagesHandling();
         pdfRemovePages.addPage(filename, 2);
         PDDocument document = PDDocument.load(new File("src/test/resources/temp/newFile.pdf"));
         Assertions.assertEquals(4, document.getNumberOfPages());
